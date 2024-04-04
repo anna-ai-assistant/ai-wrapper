@@ -5,13 +5,13 @@ import { StoreService } from './store/store.service';
 import { MemoryService } from './memory/memory.service';
 import { DocumentService } from './document/document.service';
 import { WebParserService } from './document/web-parser.service';
-import {LangChainModuleAsyncOptions, LangChainModuleOptions} from "./langchain.option";
+import {LangChainModuleAsyncOptions, LangChainModuleOptions} from "./Options/langchain.option";
+import {LibrarianTool} from "./custom_tools/librarian.tool";
+import {AbstractAgent} from "./agent/abstract.agent";
 
-@Module({
-  providers: [LangChainService, SearchService, StoreService, MemoryService, DocumentService, WebParserService]
-})
+@Module({})
 export class LangChainModule {
-  static forRoot(options: LangChainModuleOptions): DynamicModule {
+  static forRoot(agent: AbstractAgent, options: LangChainModuleOptions): DynamicModule {
     return {
       module: LangChainModule,
       providers: [
@@ -19,12 +19,20 @@ export class LangChainModule {
           provide: 'LANGCHAIN_OPTIONS',
           useValue: options,
         },
-        LangChainService,
+        SearchService,
+        StoreService,
+        MemoryService,
+        DocumentService,
+        WebParserService,
+        // Conditionnellement ajouter Librarian aux providers
+        ...(options.enableLibrarian ? [{ provide: LibrarianTool, useClass: LibrarianTool }] : []),
+        LangChainService
       ],
       exports: [LangChainService],
     };
   }
 
+  // TODO: Implement forRootAsync sync with forRoot()
   static forRootAsync(options: LangChainModuleAsyncOptions): DynamicModule {
     return {
       module: LangChainModule,

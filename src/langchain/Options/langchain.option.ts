@@ -2,10 +2,12 @@
 
 import {ChromaLibArgs} from "@langchain/community/vectorstores/chroma";
 import {ModuleMetadata} from "@nestjs/common";
+import {LibrarianOptions} from "./librarian.option";
 
 export interface LangChainModuleOptions {
-  dbConfig: ChromaLibArgs
-  apiKey: string;
+  enableLibrarian: boolean;
+  librarianConfig: LibrarianOptions|undefined;
+  dbConfig: ChromaLibArgs|undefined;
   // Ajoutez d'autres options de configuration ici
 }
 

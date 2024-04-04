@@ -4,8 +4,10 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import {StoreService} from "./store/store.service";
 import {MemoryService} from "./memory/memory.service";
 
+
 @Injectable()
 export class LangChainService {
+  private agent: CustomAgent;
   private store: StoreService;
   private memory: MemoryService;
   constructor() {
