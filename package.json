@@ -1,14 +1,15 @@
 {
-  "name": "anna-langchain-wrapper",
+  "name": "@anna-ai-assistant/langchain-wrapper",
   "version": "0.0.1",
   "description": "langchain module for anna service",
-  "main": "index.js",
+  "main": "src/langchain/langchain.module.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ANNA-AI-Assistant/langchain-wrapper.git"
+    "url": "git+https://github.com/anna-ai-assistant/langchain-wrapper.git"
   },
   "keywords": [
     "langchain"
@@ -16,9 +17,9 @@
   "author": "Plume Solution",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ANNA-AI-Assistant/langchain-wrapper/issues"
+    "url": "https://github.com/anna-ai-assistant/langchain-wrapper/issues"
   },
-  "homepage": "https://github.com/ANNA-AI-Assistant/langchain-wrapper#readme",
+  "homepage": "https://github.com/anna-ai-assistant/langchain-wrapper#readme",
   "dependencies": {
     "@langchain/community": "^0.0.44",
     "@nestjs/common": "^10.3.7",
@@ -30,7 +31,7 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^20.12.0",
     "@nestjs/cli": "^10.3.2",
     "@nestjs/schematics": "^10.1.1",
     "@nestjs/testing": "^10.3.7",
