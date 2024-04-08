@@ -1,6 +1,4 @@
-import { Injectable } from '@nestjs/common';
-import { ChatOllama } from "@langchain/community/chat_models/ollama";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
+import {Injectable} from '@nestjs/common';
 import {StoreService} from "./store/store.service";
 import {MemoryService} from "./memory/memory.service";
 import {AbstractAgent} from "./agent/abstract.agent";

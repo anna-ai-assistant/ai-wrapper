@@ -4,7 +4,7 @@ export abstract class AbstractTool implements Tool {
   abstract name: string;
   abstract type: string;
   abstract description: string;
-  abstract prompt: string;
+  abstract promptPath: string;
 
   getName(): string {
     return this.name
@@ -15,8 +15,8 @@ export abstract class AbstractTool implements Tool {
   getDescription(): string {
     return this.description
   }
-  getPrompt(): string {
-    return this.prompt
+  getPromptPath(): string {
+    return this.promptPath
   }
 
   abstract call(...args): any;

@@ -1,7 +1,7 @@
 import {Inject, Injectable} from '@nestjs/common';
-import { OllamaEmbeddings } from "@langchain/community/dist/embeddings/ollama";
+import {OllamaEmbeddings} from "@langchain/community/dist/embeddings/ollama";
 import {Chroma} from "@langchain/community/vectorstores/chroma";
-import { Document } from "langchain/document";
+import {Document} from "langchain/document";
 import {LangChainModuleOptions} from "../Options/langchain.option";
 
 

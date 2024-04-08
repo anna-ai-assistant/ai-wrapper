@@ -1,5 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { WebParserService } from './web-parser.service';
+import {Test, TestingModule} from '@nestjs/testing';
+import {WebParserService} from './web-parser.service';
 
 describe('WebParserService', () => {
   let service: WebParserService;

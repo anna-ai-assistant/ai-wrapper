@@ -2,10 +2,10 @@ export interface Tool {
   name: string;
   type: string;
   description: string;
-  prompt: string;
+  promptPath: string;
   getName(): string;
   getType(): string;
   getDescription(): string;
-  getPrompt(): string;
-  call(...args): any;
+  getPromptPath(): string;
+  call(object): object;
 }

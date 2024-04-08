@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import {Collection, MongoClient, ObjectId} from "mongodb";
-import { BufferMemory } from "langchain/memory";
-import { ConversationChain } from "langchain/chains";
-import { MongoDBChatMessageHistory } from "@langchain/community/stores/message/mongodb";
+import {Injectable} from '@nestjs/common';
+import {MongoClient, ObjectId} from "mongodb";
+import {BufferMemory} from "langchain/memory";
+import {MongoDBChatMessageHistory} from "@langchain/community/stores/message/mongodb";
 
 @Injectable()
 export class MemoryService {
