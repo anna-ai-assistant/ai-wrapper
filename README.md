@@ -1,2 +1,2 @@
 # langchain-wrapper
-LangchainJs wrapper for all anna LLM based services
+AI wrapper based on LangchainJS for all anna LLM based services
