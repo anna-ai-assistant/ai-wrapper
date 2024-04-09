@@ -1,5 +1,5 @@
 import {Inject, Injectable} from "@nestjs/common";
-import {LibrarianOptions} from "../../ai/Options/librarian.option";
+import {LibrarianOptions} from "../../ai/options/librarian.option";
 import {AbstractTool} from "../abstract.tool";
 
 @Injectable()

@@ -2,7 +2,7 @@ export interface Tool {
   name: string;
   type: string;
   description: string;
-  promptPath: string;
+  parameters: any;
   getName(): string;
   getType(): string;
   getDescription(): string;

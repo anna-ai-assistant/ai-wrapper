@@ -1,7 +1,7 @@
 import {DynamicModule, Module} from '@nestjs/common';
 import {Tool} from "./tool.interface";
 import {Toolbelt} from "./toolbelt";
-import {AiModuleOptions} from "../ai/Options/ai.option";
+import {AiModuleOptions} from "../ai/options/ai.option";
 import {LibrarianTool} from "./librarian/librarian.tool";
 
 @Module({})

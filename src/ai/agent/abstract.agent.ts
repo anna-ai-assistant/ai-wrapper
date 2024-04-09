@@ -1,36 +1,79 @@
 import {Ollama} from "@langchain/community/dist/llms/ollama";
-import {AgentExecutor, createVectorStoreAgent, VectorStoreToolkit} from "langchain/agents";
+import { LLM } from "@langchain/core/language_models/llms";
 import {AgentExecutorOutput} from "langchain/dist/agents/executor";
 import {Tool} from "../../tools/tool.interface";
+import { FakeListChatModel } from "@langchain/core/utils/testing";
+import {BaseChatModel} from "@langchain/core/dist/language_models/chat_models";
+import {ChatOllama} from "@langchain/community/dist/chat_models/ollama";
+import {AgentOption} from "../options/agent.option";
+import {BufferMemory} from "langchain/memory";
+import {RedisChatMessageHistory} from "@langchain/community/dist/stores/message/redis";
+import {ConversationChain} from "langchain/chains";
 
 export abstract class AbstractAgent {
     private askable: Tool[];
-    private agent: AgentExecutor;
+    private agent: ConversationChain;
+    private option: AgentOption;
 
-    constructor() {
+    async constructor() {
+        this.agent = await this.injectMemory();
     }
 
-    public async getResponse(input: string): Promise<AgentExecutorOutput>
+    public async call(input: string): Promise<AgentExecutorOutput>
     {
-        return this.agent.invoke({input});
-    }
-
-    public loadConfig(config: any) {
-
+        return this.agent.call({input});
     }
 
     public getAskable(): Tool[] {
         return this.askable;
     }
 
-    injectToolkit(memory) {
-        const vectorStoreInfo = {
-            name: "toolbelt",
-            description: "documentation of all tools available as call to action",
-            vectorStore: memory,
+    private getModel(): LLM|BaseChatModel {
+        if (this.option.ollamaConfig === undefined) {
+            return new FakeListChatModel({
+                responses: ["I'll callback later.", "You 'console' them!"],
+            });
         }
-        const model = new Ollama(undefined);
-        const toolkit = new VectorStoreToolkit(vectorStoreInfo, model);
-        this.agent = createVectorStoreAgent(model, toolkit);
+        switch (this.option.connector) {
+            case "ollama":
+                return new Ollama(this.option.ollamaConfig);
+            default:
+                return new ChatOllama(this.option.ollamaConfig);
+        }
+    }
+
+    private async injectMemory() {
+        const memory = new BufferMemory({
+            //TODO: Find better way to use redis memory
+            chatHistory: new RedisChatMessageHistory({
+                sessionId: new Date().toISOString(), //TODO: Find better way to generate session id
+                sessionTTL: 300, // 5 minutes, omit this parameter to make sessions never expire
+                config: {
+                    url: this.option.memory
+                }
+            }),
+        });
+
+        return new ConversationChain({llm: await this.injectToolInModel(this.getAskable()), memory });
+    }
+
+    private async injectToolInModel(tools: Tool[]) {
+        const model: LLM|BaseChatModel = this.getModel();
+        //TODO: Find better way to type bind
+        let bind = {
+            tools: []
+        };
+        for (let tool  of tools) {
+            bind.tools.push({
+                type: "function" as const,
+                function: {
+                    name: tool.name,
+                    description: tool.description,
+                    parameters: tool.parameters,
+                }
+            });
+        }
+        return model.bind(bind);
+
     }
 }

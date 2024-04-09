@@ -5,7 +5,7 @@ import {StoreService} from './store/store.service';
 import {MemoryService} from './memory/memory.service';
 import {DocumentService} from './document/document.service';
 import {WebParserService} from './document/web-parser.service';
-import {AiModuleAsyncOptions, AiModuleOptions} from "./Options/ai.option";
+import {AiModuleAsyncOptions, AiModuleOptions} from "./options/ai.option";
 import {AbstractAgent} from "./agent/abstract.agent";
 import {ToolModule} from "../tools/tool.module";
 
