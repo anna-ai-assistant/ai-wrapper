@@ -31,7 +31,7 @@
     "mongodb": "^6.8.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "redis": "^4.6.15"
+    "redis": "^4.7.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.4.1",
