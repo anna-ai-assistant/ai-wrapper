@@ -5,6 +5,7 @@ import {ReadFileTool, WriteFileTool} from "langchain/tools";
 import {AgentExecutorOutput} from "langchain/dist/agents/executor";
 import {InMemoryFileStore} from "langchain/dist/stores/file/in_memory";
 import {BabyAGI} from "langchain/dist/experimental/babyagi";
+import { Ollama, OllamaEmbeddings } from '@langchain/ollama';
 
 export class AbstractAutonomousAgent {
   //TODO: See if salesGPT is cool to implement ?
@@ -29,7 +30,7 @@ export class AbstractAutonomousAgent {
       }),
     ];
 
-    const vectorStore = new MemoryVectorStore(new OpenAIEmbeddings()); //TODO: inject vector store from options
+    const vectorStore = new MemoryVectorStore(new OllamaEmbeddings()); //TODO: inject vector store from options
 
     const autogpt = AutoGPT.fromLLMAndTools(
       new ChatOpenAI({ temperature: 0 }), // TODO: inject agent from options
@@ -49,7 +50,7 @@ export class AbstractAutonomousAgent {
     const vectorStore = new MemoryVectorStore(new OpenAIEmbeddings()); //TODO: inject vector store from options
 
     const babyAGI = BabyAGI.fromLLM({
-      llm: new OpenAI({ temperature: 0 }), //TODO: inject agent from options
+      llm: new Ollama({ temperature: 0 }), //TODO: inject agent from options
       vectorstore: vectorStore,
       maxIterations: 3,
     });

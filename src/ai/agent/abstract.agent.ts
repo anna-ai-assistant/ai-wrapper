@@ -1,13 +1,13 @@
-import {Ollama} from "@langchain/community/dist/llms/ollama";
+
 import { LLM } from "@langchain/core/language_models/llms";
 import {AgentExecutorOutput} from "langchain/dist/agents/executor";
 import {Tool} from "../../tools/tool.interface";
 import { FakeListChatModel } from "@langchain/core/utils/testing";
-import {BaseChatModel} from "@langchain/core/dist/language_models/chat_models";
-import {ChatOllama} from "@langchain/community/dist/chat_models/ollama";
+import { BaseChatModel } from "@langchain/core/dist/language_models/chat_models";
+import { ChatOllama, Ollama } from '@langchain/ollama';
 import {AgentOption} from "../options/agent.option";
 import {BufferMemory} from "langchain/memory";
-import {RedisChatMessageHistory} from "@langchain/community/dist/stores/message/redis";
+import {RedisChatMessageHistory} from "@langchain/redis";
 import {ConversationChain} from "langchain/chains";
 
 export abstract class AbstractAgent {
