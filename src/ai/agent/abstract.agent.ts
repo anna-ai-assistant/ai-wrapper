@@ -1,48 +1,73 @@
 
 import { LLM } from "@langchain/core/language_models/llms";
-import {AgentExecutorOutput} from "langchain/dist/agents/executor";
-import {Tool} from "../../tools/tool.interface";
+import { AgentExecutorOutput } from "langchain/dist/agents/executor";
+import { Tool } from "../../tools/tool.interface";
 import { FakeListChatModel } from "@langchain/core/utils/testing";
 import { BaseChatModel } from "@langchain/core/dist/language_models/chat_models";
 import { ChatOllama, Ollama } from '@langchain/ollama';
-import {AgentOption} from "../options/agent.option";
-import {BufferMemory} from "langchain/memory";
-import {RedisChatMessageHistory} from "@langchain/redis";
-import {ConversationChain} from "langchain/chains";
+import { AgentOption } from "../options/agent.option";
+import { BufferMemory } from "langchain/memory";
+import { RedisChatMessageHistory } from "@langchain/redis";
+import { ConversationChain } from "langchain/chains";
 
 export abstract class AbstractAgent {
     private askable: Tool[];
     private agent: ConversationChain;
     private option: AgentOption;
+    private chatAgent: ConversationChain;
 
-    async constructor() {
-        this.agent = await this.injectMemory();
+    protected constructor(askable: Tool[], option: AgentOption) {
+        this.agent = this.injectMemory();
+        this.chatAgent = this.injectMemory('chat');
+        this.askable = askable;
+        this.option = option;
     }
 
-    public async call(input: string): Promise<AgentExecutorOutput>
+    public async call(input: string, chat: boolean = false): Promise<AgentExecutorOutput>
     {
+        if (chat) {
+            return this.chatAgent.call({input});
+        }
         return this.agent.call({input});
+    }
+
+    public getAgent(): ConversationChain {
+        return this.agent;
+    }
+
+    public getAgentModel(): LLM {
+        return this.getModel('llm') as LLM;
+    }
+
+    public getChatAgent(): ConversationChain {
+        return this.chatAgent;
+    }
+
+    public getChatAgentModel(): BaseChatModel {
+        return this.getModel('chat') as BaseChatModel;
     }
 
     public getAskable(): Tool[] {
         return this.askable;
     }
 
-    private getModel(): LLM|BaseChatModel {
+    private getModel(mode): LLM|BaseChatModel {
         if (this.option.ollamaConfig === undefined) {
             return new FakeListChatModel({
                 responses: ["I'll callback later.", "You 'console' them!"],
             });
         }
-        switch (this.option.connector) {
-            case "ollama":
-                return new Ollama(this.option.ollamaConfig);
+        switch (mode) {
             default:
+                return new Ollama(this.option.ollamaConfig);
+            case 'chat':
                 return new ChatOllama(this.option.ollamaConfig);
         }
     }
 
-    private async injectMemory() {
+    private injectMemory(mode: string = 'llm'): ConversationChain {
+        const model: LLM|BaseChatModel = this.getModel(mode);
+
         const memory = new BufferMemory({
             //TODO: Find better way to use redis memory
             chatHistory: new RedisChatMessageHistory({
@@ -54,18 +79,17 @@ export abstract class AbstractAgent {
             }),
         });
 
-        return new ConversationChain({llm: await this.injectToolInModel(this.getAskable()), memory });
+        return new ConversationChain({llm: this.injectToolInModel(model, this.getAskable()), memory });
     }
 
-    private async injectToolInModel(tools: Tool[]) {
-        const model: LLM|BaseChatModel = this.getModel();
+    private injectToolInModel(model, tools: Tool[]) {
         //TODO: Find better way to type bind
         let bind = {
             tools: []
         };
         for (let tool  of tools) {
             bind.tools.push({
-                type: "function" as const,
+                type: 'function',
                 function: {
                     name: tool.name,
                     description: tool.description,

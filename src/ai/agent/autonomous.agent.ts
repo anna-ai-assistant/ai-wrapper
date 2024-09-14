@@ -5,14 +5,16 @@ import {ReadFileTool, WriteFileTool} from "langchain/tools";
 import {AgentExecutorOutput} from "langchain/dist/agents/executor";
 import {InMemoryFileStore} from "langchain/dist/stores/file/in_memory";
 import {BabyAGI} from "langchain/dist/experimental/babyagi";
-import { Ollama, OllamaEmbeddings } from '@langchain/ollama';
+import { ChatOllama, Ollama, OllamaEmbeddings } from '@langchain/ollama';
+import { Inject } from '@nestjs/common';
+import { AbstractAgent } from './abstract.agent';
 
-export class AbstractAutonomousAgent {
+export class AutonomousAgent {
   //TODO: See if salesGPT is cool to implement ?
   //TODO: add tools and vectorstore as options
-  constructor() {
+  constructor(@Inject private agent: AbstractAgent) {
   }
-  public async call(goals: string[]|string): Promise<AgentExecutorOutput>
+  public async callAutoGpt(goals: string[]|string): Promise<AgentExecutorOutput>
   {
     if (typeof goals === "string") {
       goals = [goals];
@@ -23,17 +25,17 @@ export class AbstractAutonomousAgent {
     const tools = [
       new ReadFileTool({ store }),
       new WriteFileTool({ store }),
-      new SerpAPI(process.env.SERPAPI_API_KEY, { //TODO: inject tools from options
-        location: "San Francisco,California,United States",
-        hl: "en",
-        gl: "us",
-      }),
+      // new SerpAPI(process.env.SERPAPI_API_KEY, { //TODO: inject tools from options
+      //   location: "San Francisco,California,United States",
+      //   hl: "en",
+      //   gl: "us",
+      // }),
     ];
 
     const vectorStore = new MemoryVectorStore(new OllamaEmbeddings()); //TODO: inject vector store from options
 
     const autogpt = AutoGPT.fromLLMAndTools(
-      new ChatOpenAI({ temperature: 0 }), // TODO: inject agent from options
+      this.agent.getChatAgentModel(),
       tools,
       {
         memory: vectorStore.asRetriever(),
@@ -45,12 +47,12 @@ export class AbstractAutonomousAgent {
     return autogpt.run(goals);
   }
 
-  public call2(input: string): Promise<AgentExecutorOutput> //TODO: fusion with call and add switch for different agents
+  public callBabyAgi(input: string): Promise<AgentExecutorOutput> //TODO: fusion with call and add switch for different agents
   {
-    const vectorStore = new MemoryVectorStore(new OpenAIEmbeddings()); //TODO: inject vector store from options
+    const vectorStore = new MemoryVectorStore(new OllamaEmbeddings()); //TODO: inject vector store from options
 
     const babyAGI = BabyAGI.fromLLM({
-      llm: new Ollama({ temperature: 0 }), //TODO: inject agent from options
+      llm: this.agent.getAgentModel(),
       vectorstore: vectorStore,
       maxIterations: 3,
     });

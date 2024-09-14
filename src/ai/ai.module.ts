@@ -3,6 +3,7 @@ import {AiService} from './ai.service';
 import {AiModuleAsyncOptions, AiModuleOptions} from "./options/ai.option";
 import {AbstractAgent} from "./agent/abstract.agent";
 import {ToolModule} from "../tools/tool.module";
+import { AutonomousAgent } from './agent/autonomous.agent';
 
 @Module({})
 export class AiModule {
@@ -15,6 +16,7 @@ export class AiModule {
           provide: AbstractAgent,
           useValue: options.agent,
         },
+        AutonomousAgent,
         AiService
       ],
       exports: [AiService],
