@@ -5,7 +5,7 @@ import {ReadFileTool, WriteFileTool} from "langchain/tools";
 import {AgentExecutorOutput} from "langchain/dist/agents/executor";
 import {InMemoryFileStore} from "langchain/dist/stores/file/in_memory";
 import {BabyAGI} from "langchain/dist/experimental/babyagi";
-import { ChatOllama, Ollama, OllamaEmbeddings } from '@langchain/ollama';
+import { OllamaEmbeddings } from '@langchain/ollama';
 import { Inject } from '@nestjs/common';
 import { AbstractAgent } from './abstract.agent';
 
