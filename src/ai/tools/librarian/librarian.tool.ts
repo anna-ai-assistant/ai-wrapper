@@ -1,17 +1,17 @@
 import {Inject, Injectable} from "@nestjs/common";
-import {LibrarianOptions} from "../../ai/options/librarian.option";
+import {LibrarianOptions} from "../../options/librarian.option";
 import {AbstractTool} from "../abstract.tool";
 
 @Injectable()
 export class LibrarianTool extends AbstractTool {
-  private description: string = "";
-  private name: string = 'librarian';
-  private promptPath: string = ""; //Todo: Implement promptPath
-  private type: string = 'information source, ask, agent';
+  protected description: string = "";
+  protected name: string = 'librarian';
+  protected promptPath: string = ""; //Todo: Implement promptPath
+  protected type: string = 'information source, ask, agent';
+  protected parameters: any;
 
-  private options: LibrarianOptions;
-
-  constructor(@Inject private options: LibrarianOptions) {
+  constructor(@Inject() protected options: LibrarianOptions) {
+    super();
 
   }
 

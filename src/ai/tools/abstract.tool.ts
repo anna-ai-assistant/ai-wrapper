@@ -1,10 +1,11 @@
 import {Tool} from "./tool.interface";
 
 export abstract class AbstractTool implements Tool {
-  private abstract name: string;
-  private abstract type: string;
-  private abstract description: string;
-  private abstract promptPath: string;
+  protected abstract name: string;
+  protected abstract type: string;
+  protected abstract description: string;
+  protected abstract promptPath: string;
+  protected abstract parameters: any;
 
   getName(): string {
     return this.name
@@ -20,5 +21,4 @@ export abstract class AbstractTool implements Tool {
   }
 
   abstract call(...args): any;
-
 }

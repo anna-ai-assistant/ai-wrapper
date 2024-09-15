@@ -2,7 +2,6 @@ import {DynamicModule, Module} from '@nestjs/common';
 import {AiService} from './ai.service';
 import {AiModuleAsyncOptions, AiModuleOptions} from "./options/ai.option";
 import {AbstractAgent} from "./agent/abstract.agent";
-import {ToolModule} from "../tools/tool.module";
 import { AutonomousAgent } from './agent/autonomous.agent';
 
 @Module({})
@@ -10,7 +9,7 @@ export class AiModule {
   static forRoot(options: AiModuleOptions): DynamicModule {
     return {
       module: AiModule,
-      imports: [ToolModule.forRoot(options)],
+      imports: [],
       providers: [
         {
           provide: AbstractAgent,
