@@ -7,8 +7,4 @@ export class FakeAgent extends AbstractAgent {
     super(
       [], option);
   }
-
-  async process(input: any): Promise<any> {
-    return input;
-  }
 }
