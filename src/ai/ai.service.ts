@@ -9,7 +9,7 @@ import { AutonomousAgent } from './agent/autonomous.agent';
 export class AiService {
   // private store: StoreService;
   // private memory: MemoryService;
-  constructor(@Inject private agent: AbstractAgent, @Inject private autonomousAgent: AutonomousAgent) {
+  constructor(@Inject() private agent: AbstractAgent, @Inject() private autonomousAgent: AutonomousAgent) {
     // this.store = new StoreService();
     // this.memory = new MemoryService();
   }

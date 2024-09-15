@@ -12,12 +12,12 @@ import { AbstractAgent } from './abstract.agent';
 export class AutonomousAgent {
   //TODO: See if salesGPT is cool to implement ?
   //TODO: add tools and vectorstore as options
-  constructor(@Inject private agent: AbstractAgent) {
+  constructor(@Inject() private agent: AbstractAgent) {
   }
-  public async callAutoGpt(goals: string[]|string): Promise<AgentExecutorOutput>
+  public async callAutoGpt(goals: string[]|string): Promise<string>
   {
     if (typeof goals === "string") {
-      goals = [goals];
+      goals = [goals] as string[];
     }
 
     const store = new InMemoryFileStore();

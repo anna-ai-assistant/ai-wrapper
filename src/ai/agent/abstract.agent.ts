@@ -1,7 +1,6 @@
-
 import { LLM } from "@langchain/core/language_models/llms";
 import { AgentExecutorOutput } from "langchain/dist/agents/executor";
-import { Tool } from "../../tools/tool.interface";
+import { Tool } from "../tools/tool.interface";
 import { FakeListChatModel } from "@langchain/core/utils/testing";
 import { BaseChatModel } from "@langchain/core/dist/language_models/chat_models";
 import { ChatOllama, Ollama } from '@langchain/ollama';
@@ -11,24 +10,20 @@ import { RedisChatMessageHistory } from "@langchain/redis";
 import { ConversationChain } from "langchain/chains";
 
 export abstract class AbstractAgent {
-    private askable: Tool[];
-    private agent: ConversationChain;
-    private option: AgentOption;
-    private chatAgent: ConversationChain;
+    protected readonly agent: ConversationChain;
+    protected readonly chatAgent: ConversationChain;
 
-    protected constructor(askable: Tool[], option: AgentOption) {
+    protected constructor(protected readonly askable: Tool[], protected readonly option: AgentOption) {
         this.agent = this.injectMemory();
         this.chatAgent = this.injectMemory('chat');
-        this.askable = askable;
-        this.option = option;
     }
 
     public async call(input: string, chat: boolean = false): Promise<AgentExecutorOutput>
     {
         if (chat) {
-            return this.chatAgent.call({input});
+            return this.getChatAgent().call({input});
         }
-        return this.agent.call({input});
+        return this.getAgent().call({input});
     }
 
     public getAgent(): ConversationChain {
@@ -51,7 +46,7 @@ export abstract class AbstractAgent {
         return this.askable;
     }
 
-    private getModel(mode): LLM|BaseChatModel {
+    protected getModel(mode): LLM|BaseChatModel {
         if (this.option.ollamaConfig === undefined) {
             return new FakeListChatModel({
                 responses: ["I'll callback later.", "You 'console' them!"],
@@ -65,7 +60,7 @@ export abstract class AbstractAgent {
         }
     }
 
-    private injectMemory(mode: string = 'llm'): ConversationChain {
+    protected injectMemory(mode: string = 'llm'): ConversationChain {
         const model: LLM|BaseChatModel = this.getModel(mode);
 
         const memory = new BufferMemory({
@@ -82,7 +77,7 @@ export abstract class AbstractAgent {
         return new ConversationChain({llm: this.injectToolInModel(model, this.getAskable()), memory });
     }
 
-    private injectToolInModel(model, tools: Tool[]) {
+    protected injectToolInModel(model, tools: Tool[]) {
         //TODO: Find better way to type bind
         let bind = {
             tools: []
