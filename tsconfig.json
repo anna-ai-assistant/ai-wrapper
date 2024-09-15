@@ -18,6 +18,6 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
   },
-  "exclude": ["node_modules", "**/*.spec.ts", "./dist/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts","**/*.e2e-spec.ts", "./dist/**/*"],
   "types": ["node"]
 }
