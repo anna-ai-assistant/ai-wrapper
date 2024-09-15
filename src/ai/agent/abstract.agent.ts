@@ -8,8 +8,9 @@ import { AgentOption } from "../options/agent.option";
 import { BufferMemory } from "langchain/memory";
 import { RedisChatMessageHistory } from "@langchain/redis";
 import { ConversationChain } from "langchain/chains";
+import { Agent } from "./agent.interface";
 
-export abstract class AbstractAgent {
+export abstract class AbstractAgent implements Agent {
     protected readonly agent: ConversationChain;
     protected readonly chatAgent: ConversationChain;
 

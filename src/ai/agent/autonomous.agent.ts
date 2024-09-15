@@ -1,19 +1,18 @@
-import {AutoGPT} from "langchain/dist/experimental/autogpt";
-import {MemoryVectorStore} from "langchain/dist/vectorstores/memory";
+import { AutoGPT } from "langchain/dist/experimental/autogpt";
+import { MemoryVectorStore } from "langchain/dist/vectorstores/memory";
 import {SerpAPI} from "@langchain/community/dist/tools/serpapi";
-import {ReadFileTool, WriteFileTool} from "langchain/tools";
-import {AgentExecutorOutput} from "langchain/dist/agents/executor";
-import {InMemoryFileStore} from "langchain/dist/stores/file/in_memory";
-import {BabyAGI} from "langchain/dist/experimental/babyagi";
+import { ReadFileTool, WriteFileTool } from "langchain/tools";
+import { AgentExecutorOutput } from "langchain/dist/agents/executor";
+import { InMemoryFileStore } from "langchain/dist/stores/file/in_memory";
+import { BabyAGI } from "langchain/dist/experimental/babyagi";
 import { OllamaEmbeddings } from '@langchain/ollama';
 import { Inject } from '@nestjs/common';
-import { AbstractAgent } from './abstract.agent';
+import { Agent } from './agent.interface';
 
 export class AutonomousAgent {
   //TODO: See if salesGPT is cool to implement ?
   //TODO: add tools and vectorstore as options
-  constructor(@Inject() private agent: AbstractAgent) {
-  }
+  constructor(@Inject('Agent') private agent: Agent) {}
   public async callAutoGpt(goals: string[]|string): Promise<string>
   {
     if (typeof goals === "string") {
