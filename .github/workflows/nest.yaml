@@ -1,8 +1,6 @@
 name: Nest
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ dev, main ]
   workflow_dispatch:
@@ -11,13 +9,12 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.x]
-
     steps:
-      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Prepare Env
         run: npm -g install @nest/cli
