@@ -21,7 +21,7 @@
     "langchain"
   ],
   "author": "Plume Solution",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/anna-ai-assistant/ai-wrapper/issues"
   },
